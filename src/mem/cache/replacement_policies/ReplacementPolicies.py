@@ -175,3 +175,12 @@ class WeightedLRURP(LRURP):
     type = "WeightedLRURP"
     cxx_class = "gem5::replacement_policy::WeightedLRU"
     cxx_header = "mem/cache/replacement_policies/weighted_lru_rp.hh"
+
+class SRRIPRP(BaseReplacementPolicy):
+    type = "SRRIPRP"
+    cxx_class = "gem5::replacement_policy::SRRIP"
+    cxx_header = "mem/cache/replacement_policies/srrip_rp.hh"
+    num_bits = Param.Int(2, "Number of bits per RRPV")
+    hit_priority = Param.Bool(
+        False, "Prioritize evicting blocks that havent had a hit recently"
+    )
