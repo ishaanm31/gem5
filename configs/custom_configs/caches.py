@@ -93,4 +93,4 @@ class L2Cache(Cache):
         self.writeback_clean = writeback_clean
         self.clusivity = clusivity
         self.prefetcher = PrefetcherCls()
-        self.replacement_policy = SHiPPCRP()
+        self.replacement_policy = LRURP()
