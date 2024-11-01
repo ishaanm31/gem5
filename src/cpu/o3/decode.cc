@@ -51,6 +51,10 @@
 #include "params/BaseO3CPU.hh"
 #include "sim/full_system.hh"
 
+//#YSH -> Added a new include
+#include <iostream>
+#include "debug/BPredHints.hh"
+
 // clang complains about std::set being overloaded with Packet::set if
 // we open up the entire namespace std
 using std::list;
@@ -291,6 +295,11 @@ Decode::squash(const DynInstPtr &inst, ThreadID tid)
     toFetch->decodeInfo[tid].mispredictInst = inst;
     toFetch->decodeInfo[tid].squash = true;
     toFetch->decodeInfo[tid].doneSeqNum = inst->seqNum;
+
+    //#YSH -> Print out PC, incorrect branch target and correct branch target
+    //std::cout << inst->pcState() << " " << toFetch->decodeInfo[tid].nextPC << " " << *inst->branchTarget() << std::endl;
+    DPRINTF(BPredHints, "PC: %llu Incorrect Branch Target: %llu Correct Branch Target: %llu\n", inst->pcState(), toFetch->decodeInfo[tid].nextPC, *inst->branchTarget());
+
     set(toFetch->decodeInfo[tid].nextPC, *inst->branchTarget());
 
     // Looking at inst->pcState().branching()
