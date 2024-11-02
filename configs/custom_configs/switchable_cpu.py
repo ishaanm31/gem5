@@ -43,7 +43,7 @@ class CustomSwitchableProcessor(SwitchableProcessor):
                 for i in range(num_cores)
             ],
             self._switch_key1: [
-                BaseCPUCore(core=X86_O3_Custom(cpu_id=i, max_insts_any_thread=warmup_insts), isa=isa)
+                BaseCPUCore(core=X86TimingSimpleCPU(cpu_id=i, max_insts_any_thread=warmup_insts), isa=isa)
                 for i in range(num_cores)
             ],
             self._switch_key2: [
