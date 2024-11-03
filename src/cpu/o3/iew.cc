@@ -425,8 +425,8 @@ IEW::squashDueToBranch(const DynInstPtr& inst, ThreadID tid)
     std::cout << inst->pcState().instAddr() << "," << inst->readPredTarg().instAddr() << ",";
 
     //#YSH -> Computation to figure out next PC
-    std::unique_ptr<PCStateBase> next_pc(inst->pcState()->clone());
-    staticInst->advancePC(*next_pc);
+    std::unique_ptr<PCStateBase> next_pc(inst->pcState().clone());
+    inst->staticInst->advancePC(*next_pc);
     std::cout << next_pc->instAddr() << ",1" << std::endl;
 
     if (!toCommit->squash[tid] ||
