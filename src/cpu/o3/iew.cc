@@ -422,12 +422,17 @@ IEW::squashDueToBranch(const DynInstPtr& inst, ThreadID tid)
             "\n", tid, inst->seqNum, inst->pcState() );
 
     //#YSH -> Print out PC, incorrect branch target, correct branch target and decode/IEW capture flag (1 here)
-    std::cerr << inst->pcState().instAddr() << "," << inst->readPredTarg().instAddr() << ",";
+
+    std::ofstream ofile;
+    ofile.open("mispredictions.txt", std::ios_base::app);
+    ofile << inst->pcState().instAddr() << "," << inst->readPredTarg().instAddr() << ",";
+    //std::cerr << inst->pcState().instAddr() << "," << inst->readPredTarg().instAddr() << ",";
 
     //#YSH -> Computation to figure out next PC
     std::unique_ptr<PCStateBase> next_pc(inst->pcState().clone());
     inst->staticInst->advancePC(*next_pc);
-    std::cerr << next_pc->instAddr() << ",1" << std::endl;
+    ofile << next_pc->instAddr() << ",1" << std::endl;
+    //std::cerr << next_pc->instAddr() << ",1" << std::endl;
 
     if (!toCommit->squash[tid] ||
             inst->seqNum < toCommit->squashedSeqNum[tid]) {
