@@ -424,15 +424,10 @@ IEW::squashDueToBranch(const DynInstPtr& inst, ThreadID tid)
     //#YSH -> Print out PC, incorrect branch target, correct branch target and decode/IEW capture flag (1 here)
     std::cout << inst->pcState().instAddr() << "," << inst->readPredTarg().instAddr() << ",";
 
-    //#YSH -> Print out correct branch target (if statement checks whether branch is direct or indirect) and decode/IEW capture flag (1 here)
-    if(inst->isDirectCtrl())
-    {
-        std::cout << inst->staticInst->branchTarget(inst->pcState()).instAddr() << ",1" << std::endl;
-    }
-    else if(inst->isIndirectCtrl())
-    {
-        std::cout << inst->staticInst->branchTarget(threadContexts[tid]).instAddr() << ",1" << std::endl;
-    }
+    //#YSH -> Computation to figure out next PC
+    std::unique_ptr<PCStateBase> next_pc(inst->pcState()->clone());
+    staticInst->advancePC(*next_pc);
+    std::cout << next_pc->instAddr() << ",1" << std::endl;
 
     if (!toCommit->squash[tid] ||
             inst->seqNum < toCommit->squashedSeqNum[tid]) {
