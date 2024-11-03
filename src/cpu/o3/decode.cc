@@ -297,7 +297,7 @@ Decode::squash(const DynInstPtr &inst, ThreadID tid)
     toFetch->decodeInfo[tid].doneSeqNum = inst->seqNum;
 
     //#YSH -> Print out PC, incorrect branch target, correct branch target and decode/IEW capture flag (0 here)
-    std::cout << inst->pcState().instAddr() << "," << inst->readPredTarg().instAddr() << "," << inst->branchTarget()->instAddr() << ",0" << std::endl;
+    std::cerr << inst->pcState().instAddr() << "," << inst->readPredTarg().instAddr() << "," << inst->branchTarget()->instAddr() << ",0" << std::endl;
     //DPRINTF(BPredHints, "PC: %llu Incorrect Branch Target: %llu Correct Branch Target: %llu\n", inst->pcState(), toFetch->decodeInfo[tid].nextPC, *inst->branchTarget());
 
     set(toFetch->decodeInfo[tid].nextPC, *inst->branchTarget());
