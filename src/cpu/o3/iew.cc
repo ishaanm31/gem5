@@ -58,6 +58,9 @@
 #include "debug/O3PipeView.hh"
 #include "params/BaseO3CPU.hh"
 
+//#YSH -> Added a new include
+#include <iostream>
+
 namespace gem5
 {
 
@@ -417,6 +420,9 @@ IEW::squashDueToBranch(const DynInstPtr& inst, ThreadID tid)
     DPRINTF(IEW, "[tid:%i] [sn:%llu] Squashing from a specific instruction,"
             " PC: %s "
             "\n", tid, inst->seqNum, inst->pcState() );
+
+    //#YSH -> Print out PC, incorrect branch target, correct branch target and decode/IEW capture flag (1 here)
+    std::cout << inst->pcState().instAddr() << "," << inst->readPredTarg().instAddr() << "," << inst->branchTarget()->instAddr() << ",1" << std::endl;
 
     if (!toCommit->squash[tid] ||
             inst->seqNum < toCommit->squashedSeqNum[tid]) {
