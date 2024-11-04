@@ -69,6 +69,9 @@
 #include "sim/full_system.hh"
 #include "sim/system.hh"
 
+//#YSH -> Variable to hold line number of misprediction hints file
+uint64_t hint_line = 0;
+
 namespace gem5
 {
 
