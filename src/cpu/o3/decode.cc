@@ -300,7 +300,7 @@ Decode::squash(const DynInstPtr &inst, ThreadID tid)
     //std::cerr << inst->pcState().instAddr() << "," << inst->readPredTarg().instAddr() << "," << inst->branchTarget()->instAddr() << ",0" << std::endl;
     std::ofstream ofile;
     ofile.open("mispredictions.txt", std::ios_base::app);
-    ofile << inst->pcState().instAddr() << "," << inst->readPredTarg().instAddr() << "," << inst->branchTarget()->instAddr() << ",0" << std::endl;
+    ofile << inst->pcState().instAddr() << " " << inst->readPredTarg().instAddr() << " " << inst->branchTarget()->instAddr() << " 0" << std::endl;
     //DPRINTF(BPredHints, "PC: %llu Incorrect Branch Target: %llu Correct Branch Target: %llu\n", inst->pcState(), toFetch->decodeInfo[tid].nextPC, *inst->branchTarget());
 
     set(toFetch->decodeInfo[tid].nextPC, *inst->branchTarget());
