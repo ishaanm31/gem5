@@ -540,7 +540,7 @@ Fetch::lookupAndUpdateNextPC(const DynInstPtr &inst, PCStateBase &next_pc)
         next_pc.set(correct_target);  // Set correct prediction
         prev_hint_line = hint_line;  
         inst->setPredTarg(next_pc);
-        std::cout << prev_hint_line << " " << seq << " " << correct_target << std::endl;
+        //std::cout << prev_hint_line << " " << seq << " " << correct_target << std::endl;
     }
     else if(seq < inst->seqNum)  // no overshoot, start reading file
     {
@@ -557,7 +557,7 @@ Fetch::lookupAndUpdateNextPC(const DynInstPtr &inst, PCStateBase &next_pc)
                 next_pc.set(correct_target);  // Set correct prediction
                 prev_hint_line = hint_line;  
                 inst->setPredTarg(next_pc);
-                std::cout << prev_hint_line << " " << seq << " " << correct_target << std::endl;
+                //std::cout << prev_hint_line << " " << seq << " " << correct_target << std::endl;
                 break;
             }
         }
