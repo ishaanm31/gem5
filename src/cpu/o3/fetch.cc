@@ -534,13 +534,15 @@ Fetch::lookupAndUpdateNextPC(const DynInstPtr &inst, PCStateBase &next_pc)
     while(infile >> pc >> incorrect_target >> correct_target >> decode)
     {
         hint_line++;
-        if(hint_line >= prev_hint_line)  // Triggers only after point of previous hint
+	    //std::cout << hint_line << " ";
+        if(hint_line >= prev_hint_line && hint_line < prev_hint_line + 100)  // Triggers only after point of previous hint
         {
             if(pc == inst->pcState().instAddr())  // PC matches that of hint
             {
                 next_pc.set(correct_target);  // Set correct prediction
                 prev_hint_line = hint_line;  
                 inst->setPredTarg(next_pc);
+                std::cout << prev_hint_line << " " << pc << " " << correct_target << std::endl;
                 break;
             }
         }
