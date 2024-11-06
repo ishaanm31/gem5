@@ -75,6 +75,10 @@ uint64_t prev_hint_line = 0;
 //#YSH -> Added iostream header
 #include <iostream>
 
+//#YSH -> Added input file to read mispredictions from
+std::ifstream infile("mispredictions.txt");
+uint64_t hint_line = 0;
+
 namespace gem5
 {
 
@@ -528,23 +532,23 @@ Fetch::lookupAndUpdateNextPC(const DynInstPtr &inst, PCStateBase &next_pc)
     // #YSH -> Read the mispredictions file and update the prediction using hints
     // Here we assume that there are spaces between each of the entries
     // Major problem: Branch prediction accuracy might get adversely affected
-    std::ifstream infile("mispredictions.txt");
-    uint64_t hint_line = 0;
     uint64_t seq, incorrect_target, correct_target, decode;
     while(infile >> seq >> incorrect_target >> correct_target >> decode)
     {
         hint_line++;
 	    //std::cout << hint_line << " ";
-        if(hint_line < prev_hint_line + 100 && hint_line > prev_hint_line - 100)  // Does not look way beyond the location of the previous hint
+        if(seq > inst->seqNum)  // Overshoot, break the loop
         {
-            if(seq == inst->seqNum)  // seqNum matches that of hint
-            {
-                next_pc.set(correct_target);  // Set correct prediction
-                prev_hint_line = hint_line;  
-                inst->setPredTarg(next_pc);
-                std::cout << prev_hint_line << " " << seq << " " << correct_target << std::endl;
-                break;
-            }
+            break;
+        }
+
+        if(seq == inst->seqNum)  // seqNum matches that of hint
+        {
+            next_pc.set(correct_target);  // Set correct prediction
+            prev_hint_line = hint_line;  
+            inst->setPredTarg(next_pc);
+            std::cout << prev_hint_line << " " << seq << " " << correct_target << std::endl;
+            break;
         }
     }
 
