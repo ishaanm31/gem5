@@ -535,31 +535,31 @@ Fetch::lookupAndUpdateNextPC(const DynInstPtr &inst, PCStateBase &next_pc)
     // Major problem: Branch prediction accuracy might get adversely affected
 
     // First check if previously read entry matches
-    // if(seq == inst->seqNum)  
-    // {
-    //     next_pc.set(correct_target);  // Set correct prediction
-    //     prev_hint_line = hint_line;  
-    //     inst->setPredTarg(next_pc);
-    // }
-    // else if(seq < inst->seqNum)  // no overshoot, start reading file
-    // {
-    //     while(infile >> seq >> incorrect_target >> correct_target >> decode)
-    //     {
-    //         hint_line++;
-    //         if(seq > inst->seqNum)  // Overshoot, break the loop
-    //         {
-    //             break;
-    //         }
+    if(seq == inst->seqNum)  
+    {
+        next_pc.set(correct_target);  // Set correct prediction
+        prev_hint_line = hint_line;  
+        inst->setPredTarg(next_pc);
+    }
+    else if(seq < inst->seqNum)  // no overshoot, start reading file
+    {
+        while(infile >> seq >> incorrect_target >> correct_target >> decode)
+        {
+            hint_line++;
+            if(seq > inst->seqNum)  // Overshoot, break the loop
+            {
+                break;
+            }
 
-    //         if(seq == inst->seqNum)  // seqNum matches that of hint
-    //         {
-    //             next_pc.set(correct_target);  // Set correct prediction
-    //             prev_hint_line = hint_line;  
-    //             inst->setPredTarg(next_pc);
-    //             break;
-    //         }
-    //     }
-    // }
+            if(seq == inst->seqNum)  // seqNum matches that of hint
+            {
+                next_pc.set(correct_target);  // Set correct prediction
+                prev_hint_line = hint_line;  
+                inst->setPredTarg(next_pc);
+                break;
+            }
+        }
+    }
 
     if (predict_taken) {
         ++fetchStats.predictedBranches;

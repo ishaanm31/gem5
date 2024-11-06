@@ -9,7 +9,18 @@ gem5folder=/home/yashas/EE748/gem5-EE748
 specfolder=/home/yashas/SPEC_binaries/benchspec/CPU2006
 
 # Variable to hold simulation results directory
-resultfolder=/simulation_results/A4/HintCollection
+resultfolder=/simulation_results/A4/simulation_with_hints
+
+# Make copy of misprediction hints in each benchmark folder
+cp $gem5folder$resultfolder/astar/mispredictions.txt $specfolder/473.astar/exe
+cp $gem5folder$resultfolder/hmmer/mispredictions.txt $specfolder/456.hmmer/exe
+cp $gem5folder$resultfolder/milc/mispredictions.txt $specfolder/433.milc/exe
+cp $gem5folder$resultfolder/bzip2/mispredictions.txt $specfolder/401.bzip2/exe
+cp $gem5folder$resultfolder/lbm/mispredictions.txt $specfolder/470.lbm/exe
+cp $gem5folder$resultfolder/namd/mispredictions.txt $specfolder/444.namd/exe
+cp $gem5folder$resultfolder/gamess/mispredictions.txt $specfolder/416.gamess/exe
+cp $gem5folder$resultfolder/mcf/mispredictions.txt $specfolder/429.mcf/exe
+cp $gem5folder$resultfolder/perlbench/mispredictions.txt $specfolder/400.perlbench/exe
 
 # Move to astar folder
 cd $specfolder/473.astar/exe
@@ -53,13 +64,24 @@ cd $specfolder/400.perlbench/exe
 # Wait till all processes are complete
 wait
 
-# Move all misprediction hint files to their corresponding result directories
-mv $specfolder/473.astar/exe/mispredictions.txt $gem5folder$resultfolder/astar
-mv $specfolder/456.hmmer/exe/mispredictions.txt $gem5folder$resultfolder/hmmer
-mv $specfolder/433.milc/exe/mispredictions.txt $gem5folder$resultfolder/milc
-mv $specfolder/401.bzip2/exe/mispredictions.txt $gem5folder$resultfolder/bzip2
-mv $specfolder/470.lbm/exe/mispredictions.txt $gem5folder$resultfolder/lbm
-mv $specfolder/444.namd/exe/mispredictions.txt $gem5folder$resultfolder/namd
-mv $specfolder/416.gamess/exe/mispredictions.txt $gem5folder$resultfolder/gamess
-mv $specfolder/429.mcf/exe/mispredictions.txt $gem5folder$resultfolder/mcf
-mv $specfolder/400.perlbench/exe/mispredictions.txt $gem5folder$resultfolder/perlbench
+# # Move all misprediction hint files to their corresponding result directories
+# mv $specfolder/473.astar/exe/mispredictions.txt $gem5folder$resultfolder/astar
+# mv $specfolder/456.hmmer/exe/mispredictions.txt $gem5folder$resultfolder/hmmer
+# mv $specfolder/433.milc/exe/mispredictions.txt $gem5folder$resultfolder/milc
+# mv $specfolder/401.bzip2/exe/mispredictions.txt $gem5folder$resultfolder/bzip2
+# mv $specfolder/470.lbm/exe/mispredictions.txt $gem5folder$resultfolder/lbm
+# mv $specfolder/444.namd/exe/mispredictions.txt $gem5folder$resultfolder/namd
+# mv $specfolder/416.gamess/exe/mispredictions.txt $gem5folder$resultfolder/gamess
+# mv $specfolder/429.mcf/exe/mispredictions.txt $gem5folder$resultfolder/mcf
+# mv $specfolder/400.perlbench/exe/mispredictions.txt $gem5folder$resultfolder/perlbench
+
+# Remove copies of misprediction hints
+rm $specfolder/473.astar/exe/mispredictions.txt
+rm $specfolder/456.hmmer/exe/mispredictions.txt
+rm $specfolder/433.milc/exe/mispredictions.txt
+rm $specfolder/401.bzip2/exe/mispredictions.txt
+rm $specfolder/470.lbm/exe/mispredictions.txt
+rm $specfolder/444.namd/exe/mispredictions.txt
+rm $specfolder/416.gamess/exe/mispredictions.txt
+rm $specfolder/429.mcf/exe/mispredictions.txt
+rm $specfolder/400.perlbench/exe/mispredictions.txt
