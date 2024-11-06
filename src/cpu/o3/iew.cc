@@ -423,9 +423,9 @@ IEW::squashDueToBranch(const DynInstPtr& inst, ThreadID tid)
 
     //#YSH -> Print out PC, incorrect branch target, correct branch target and decode/IEW capture flag (1 here)
 
-    // std::ofstream ofile;
-    // ofile.open("mispredictions.txt", std::ios_base::app);
-    // ofile << inst->pcState().instAddr() << " " << inst->readPredTarg().instAddr() << " ";
+    std::ofstream ofile;
+    ofile.open("mispredictions.txt", std::ios_base::app);
+    ofile << inst->seqNum << " " << inst->readPredTarg().instAddr() << " ";
     //std::cerr << inst->pcState().instAddr() << "," << inst->readPredTarg().instAddr() << ",";
 
     //#YSH -> Computation to figure out next PC
