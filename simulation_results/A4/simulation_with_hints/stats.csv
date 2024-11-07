@@ -1,0 +1,10 @@
+Benchmark,IPC
+hmmer,0.921006
+bzip2,0.595957
+milc,0.386637
+lbm,0.218482
+astar,0.879884
+mcf,0.207189
+perlbench,0.862753
+namd,1.240345
+gamess,1.179069
