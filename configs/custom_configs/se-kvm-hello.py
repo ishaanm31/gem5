@@ -22,6 +22,8 @@ board = SimpleBoard(
 )
 
 board.set_se_binary_workload(obtain_resource("x86-hello64-dynamic"))
+# board.set_se_binary_workload(binary=BinaryResource(local_path=sys.argv[]), arguments=prog_args)
+
 
 simulator = Simulator(board=board)
 simulator.run()
