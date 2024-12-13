@@ -22,7 +22,6 @@ requires(isa_required=ISA.X86)
 
 # Adding a processor
 processor = CustomSwitchableProcessor(num_cores=1, isa=ISA.X86, fastforward_insts=int(sys.argv[1]), warmup_insts=int(sys.argv[2]), detailed_insts=int(sys.argv[3]))
-#processor = CustomSwitchableProcessor(num_cores=1, isa=ISA.X86, detailed_insts=int(sys.argv[1]))
 
 # Adding a custom cache hierarchy
 cache_hierarchy = CustomCacheHierarchy(l1d_size="32kB", l1i_size="32kB", l2_size="256kB")
@@ -44,8 +43,6 @@ if len(sys.argv) > 5:
     for argnum in range(5, len(sys.argv)):
         prog_args.append(sys.argv[argnum].strip('"'))
 board.set_se_binary_workload(binary=BinaryResource(local_path=sys.argv[4]), arguments=prog_args)
-# board.set_se_binary_workload(obtain_resource("x86-hello64-dynamic"))
-
 
 # Some convenient functions to be run at transition points
 def switch_cpu() -> bool:
@@ -71,3 +68,5 @@ print(
 
 
 #./build/X86/gem5.opt configs/custom_configs/ee748_assign2_1.py 100000000000 100 100 /home/ishaan/distrobox_ubuntu22/Benchmark/EE_748/benchspec/CPU2006/444.namd/exe/namd_base.gcc44-64bit --input /home/ishaan/distrobox_ubuntu22/Benchmark/EE_748/benchspec/CPU2006/444.namd/data/all/input/namd.input --iterations 38
+
+#./build/X86/gem5.opt configs/custom_configs/ee748_assign2_1.py 100000000000 100 100 /home/ishaan/Study/EE748/EE_748/benchspec/CPU2006/444.namd/exe/namd_base.gcc44-64bit --input /home/ishaan/Study/EE748/EE_748/benchspec/CPU2006/444.namd/data/all/input/namd.input --iterations 38
