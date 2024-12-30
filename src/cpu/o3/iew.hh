@@ -54,6 +54,8 @@
 #include "cpu/timebuf.hh"
 #include "debug/IEW.hh"
 #include "sim/probe/probe.hh"
+#include "cpu/o3/schedule_trace.hh"
+
 
 namespace gem5
 {
@@ -90,6 +92,8 @@ class IEW
     /** Overall IEW stage status. Used to determine if the CPU can
      * deschedule itself due to a lack of activity.
      */
+    schedule_trace my_schedule_trace;
+
     enum Status
     {
         Active,
@@ -116,6 +120,7 @@ class IEW
     StageStatus exeStatus;
     /** Writeback status. */
     StageStatus wbStatus;
+    long long unsigned count = 0;
 
     /** Probe points. */
     ProbePointArg<DynInstPtr> *ppMispredict;

@@ -1373,6 +1373,12 @@ IEW::writebackInsts()
         // Notify potential listeners that execution is complete for this
         // instruction.
         ppToCommit->notify(inst);
+        my_schedule_trace.instruction_commit(inst);
+        if (count++ == 500000){
+            my_schedule_trace.print_stats();
+            count = 0;
+        }
+
 
         // Some instructions will be sent to commit without having
         // executed because they need commit to handle them.
