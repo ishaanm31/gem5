@@ -11,9 +11,9 @@ benchmarks = {
         "executable": "bzip2",
         "cmd": ["bzip2", "input.program"],
     },
-    "cactusADM": {
+    "cactusADM": { #NotWorking
         "executable": "cactusADM",
-        "cmd": ["cactusADM", "benchADM.par"],
+        "cmd": ["cactusADM", "cactusADM", "benchADM.par"],
     },
     "calculix": {
         "executable": "calculix",
@@ -23,7 +23,7 @@ benchmarks = {
         "executable": "dealII",
         "cmd": ["dealII", "100"],
     },
-    "gamess": {
+    "gamess": { #NotWorking
         "executable": "gamess",
         "cmd": ["gamess"],
         "input": "cytosine.2.config",
@@ -32,7 +32,7 @@ benchmarks = {
         "executable": "gcc",
         "cmd": ["gcc", "200.in"],
     },
-    "GemsFDTD": {
+    "GemsFDTD": { #NotWorking
         "executable": "GemsFDTD",
         "cmd": ["GemsFDTD"],
     },
@@ -57,7 +57,7 @@ benchmarks = {
         "executable": "lbm",
         "cmd": ["lbm", "3000", "reference.dat", "0", "0", "100_100_130_ldc.of"],
     },
-    "leslie3d": {
+    "leslie3d": { #NotWorking
         "executable": "leslie3d",
         "cmd": ["leslie3d"],
         "input": "leslie3d.in",
@@ -107,11 +107,11 @@ benchmarks = {
         "executable": "specrand",
         "cmd": ["specrand", "1255432124", "234923"],
     },
-    "tonto": {
+    "tonto": { #NotWorking
         "executable": "tonto",
         "cmd": ["tonto"],
     },
-    "wrf": {
+    "wrf": { #NotWorking
         "executable": "wrf",
         "cmd": ["wrf"],
     },
@@ -119,7 +119,7 @@ benchmarks = {
         "executable": "Xalan",
         "cmd": ["Xalan", "t5.xml", "xalanc.xsl"],
     },
-    "zeusmp": {
+    "zeusmp": { #NotWorking
         "executable": "zeusmp",
         "cmd": ["zeusmp"],
     },
