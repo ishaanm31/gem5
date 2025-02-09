@@ -42,8 +42,8 @@ ISA=X86                          # name of ISA (ARM,X86)
 
 ISA_lower=$(echo "$ISA" | tr '[:upper:]' '[:lower:]')
 ############ DIRECTORY VARIABLES: MODIFY ACCORDINGLY #############
-GEM5_DIR=/home/ishaan/Study/BTP/gem5                          # Install location of gem5
-SPEC_DIR=/home/ishaan/Study/EE748/EE_748    # Install location of your SPEC2006 benchmarks
+GEM5_DIR=/home/ishaan/distrobox_ubuntu22/Yashas/gem5-EE748   # Install location of gem5
+SPEC_DIR=/home/ishaan/distrobox_ubuntu22/Benchmark/EE_748   # Install location of your SPEC2006 benchmarks
 ##################################################################
 
 ######################### BENCHMARK CODENAMES ####################
