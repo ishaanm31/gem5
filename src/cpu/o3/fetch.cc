@@ -68,6 +68,7 @@
 #include "sim/eventq.hh"
 #include "sim/full_system.hh"
 #include "sim/system.hh"
+#include <iostream>
 
 //#YSH -> Variable to hold line number of misprediction hints file
 uint64_t prev_hint_line = 0;
@@ -110,7 +111,10 @@ Fetch::Fetch(CPU *_cpu, const BaseO3CPUParams &params)
       numThreads(params.numThreads),
       numFetchingThreads(params.smtNumFetchingThreads),
       icachePort(this, _cpu),
-      finishTranslationEvent(this), fetchStats(_cpu, this)
+      finishTranslationEvent(this),
+      utilizeBranchHints(params.utilizeBranchHints),
+      fetchStats(_cpu, this)
+
 {
     if (numThreads > MaxThreads)
         fatal("numThreads (%d) is larger than compiled limit (%d),\n"
@@ -493,6 +497,12 @@ Fetch::deactivateThread(ThreadID tid)
     }
 }
 
+void
+Fetch::setBOQ(BOQ *boq_ptr)
+{
+    boq = boq_ptr;
+}
+ 
 bool
 Fetch::lookupAndUpdateNextPC(const DynInstPtr &inst, PCStateBase &next_pc)
 {
@@ -509,8 +519,80 @@ Fetch::lookupAndUpdateNextPC(const DynInstPtr &inst, PCStateBase &next_pc)
     }
 
     ThreadID tid = inst->threadNumber;
+        if(utilizeBranchHints) {
+        std::string line;
+        if (std::getline(boq->branchOutcomeFile, line)) {
+            std::istringstream iss(line);
+
+            std::unique_ptr<PCStateBase> inst_pc(next_pc.clone());
+            std::unique_ptr<PCStateBase> branch_target(next_pc.clone());
+            MicroPC branch_target_upc;
+            MicroPC branch_target_nupc;
+            bool correct_branch_direction;
+
+            /** >> operator in src/arch/generic/pcstate.hh is overloaded to save into PCState object
+             * Ideally, only branch instruction PC and target PC must be stored in BOQ entry,
+             * but for X86, branch can be taken within microops of a single PC, hence microPC info is also needed.
+             * BOQ entry will change for other ISAs.
+            */
+
+            iss >> *inst_pc;
+            iss >> *branch_target;
+            iss >> branch_target_upc;
+            iss >> branch_target_nupc;
+            iss >> correct_branch_direction;
+
+            boq->insertBranchOutcome(tid, *inst_pc, *branch_target, branch_target_upc, branch_target_nupc, correct_branch_direction);
+        }
+        else {
+            DPRINTF(Fetch, "No more BOQ entries present to write into queue\n");
+
+            /** Need to increment head iterator since writing to and reading from queue are not in sync due to
+             * squashed branch instructions. For more info, check comment in src/cpu/o3/cpu.cc
+            */ 
+            boq->head[tid]++;
+            // Close BOQ file as it is no longer needed.
+            boq->branchOutcomeFile.close();
+        }
+    }
+
+    // Override Branch Predictor by using BOQ
+    if(utilizeBranchHints) {
+        if(!boq->BranchOutcomeQueue[tid].empty()) {
+            BOQ::BOQEntry boq_entry = boq->readentryfromBOQ(tid);
+
+            /** Match the branch instruction PC with BOQ entry instruction PC
+             * (should always match since we are forwarding all correct branch outcomes)
+            */ 
+            if(boq_entry.inst_pc_pc == next_pc.instAddr()) {
+                predict_taken = boq_entry.branch_direction;
+                if(predict_taken) {
+                    /** If branch should be taken, update the npc, upc and nupc of next pc from boq entry
+                     * Write a new function for other ISA depending on the needed PC manipulation.
+                    */
+                    std::unique_ptr<PCStateBase> target = inst->branch(boq_entry.branch_target_pc, boq_entry.branch_target_npc, boq_entry.branch_target_upc, boq_entry.branch_target_nupc);
+                    set(next_pc,*target);
+                } else {
+                    // Just advance PC to next microop or next instruction if branch should not be taken
+                    inst->staticInst->advancePC(next_pc);
+                }
+                DPRINTF(Fetch, "BOQ entry read PC: %#x Branch Direction : %d\n", next_pc, predict_taken);
+            }
+            else {
+                DPRINTF(Fetch, "Fatal!!! Something bad is going on BOQ entry PC: %#x Inst PC: %#x\n",
+                    boq_entry.inst_pc_pc, next_pc.instAddr());
+            }
+        }
+        else {
+            DPRINTF(Fetch, "Fatal!!! BOQ must have an entry for the branch at PC %#x\n",
+                inst->pcState().instAddr());
+        }
+    }
+    // Else Use Branch Predictor
+    else {
     predict_taken = branchPred->predict(inst->staticInst, inst->seqNum,
                                         next_pc, tid);
+    }
 
     if (predict_taken) {
         DPRINTF(Fetch, "[tid:%i] [sn:%llu] Branch at PC %#x "

@@ -134,5 +134,20 @@ X86MicroopBase::branchTarget(const PCStateBase &branch_pc) const
     return std::unique_ptr<PCStateBase>{pcs};
 }
 
+/** Function to set the PCState of next instruction(branch target) for a branch instruction.
+  Similar function can be added for other ISAs as well.
+*/
+std::unique_ptr<PCStateBase>
+X86MicroopBase::branch(const PCStateBase &branch_pc, Addr branch_target_pc, Addr branch_target_npc, MicroPC branch_target_upc, MicroPC branch_target_nupc) const
+{
+    PCStateBase *pcs = branch_pc.clone();
+    DPRINTF(X86, "branchTarget PC info: %s, Branch Target: %#x\n", *pcs,
+            branch_target_pc);
+    auto &xpc = pcs->as<PCState>();
+    xpc.npc(branch_target_pc);
+    xpc.End(branch_target_npc, branch_target_upc, branch_target_nupc);
+    return std::unique_ptr<PCStateBase>{pcs};
+}
+
 } // namespace X86ISA
 } // namespace gem5

@@ -55,6 +55,7 @@
 #include "debug/IEW.hh"
 #include "sim/probe/probe.hh"
 #include "cpu/o3/schedule_trace.hh"
+#include "cpu/o3/boq.hh"
 
 
 namespace gem5
@@ -160,6 +161,9 @@ class IEW
 
     /** Sets pointer to the scoreboard. */
     void setScoreboard(Scoreboard *sb_ptr);
+    
+    /** Sets pointer to the ROB. */
+    void setROB(ROB *rob_ptr);
 
     /** Perform sanity checks after a drain. */
     void drainSanityCheck() const;
@@ -342,6 +346,9 @@ class IEW
 
     /** Scoreboard pointer. */
     Scoreboard* scoreboard;
+
+    /** ROB pointer. */
+    ROB* rob;
 
   private:
     /** CPU pointer. */

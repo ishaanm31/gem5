@@ -109,6 +109,13 @@ class PCState : public GenericISA::UPCState<8>
     }
 
     void
+    End(Addr branch_target_npc, MicroPC branch_target_upc, MicroPC branch_target_nupc)
+    {
+        Base::End(branch_target_npc, branch_target_upc, branch_target_nupc);
+        _size = 0;
+    }    
+
+    void
     serialize(CheckpointOut &cp) const override
     {
         Base::serialize(cp);

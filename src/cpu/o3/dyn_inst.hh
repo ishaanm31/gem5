@@ -322,6 +322,7 @@ class DynInst : public ExecContext, public RefCounted
     ////////////////////// Branch Data ///////////////
     /** Predicted PC state after this instruction. */
     std::unique_ptr<PCStateBase> predPC;
+    std::unique_ptr<PCStateBase> nextPC;
 
     /** The Macroop if one exists */
     const StaticInstPtr macroop;
@@ -532,6 +533,12 @@ class DynInst : public ExecContext, public RefCounted
         staticInst->advancePC(*next_pc);
         return *next_pc != *predPC;
     }
+    const PCStateBase &returnNextPC()
+    {
+        set(nextPC,pc);
+        staticInst->advancePC(*nextPC);
+        return *nextPC;
+    }
 
     //
     //  Instruction types.  Forward checks to StaticInst object.
@@ -672,6 +679,13 @@ class DynInst : public ExecContext, public RefCounted
     branchTarget() const
     {
         return staticInst->branchTarget(*pc);
+    }
+
+    /** Branches to the branch target address. */
+    std::unique_ptr<PCStateBase>
+    branch(Addr branch_target_pc, Addr branch_target_npc, MicroPC branch_target_upc, MicroPC branch_target_nupc) const
+    {
+        return staticInst->branch(*pc, branch_target_pc, branch_target_npc, branch_target_upc, branch_target_nupc);
     }
 
     /** Returns the number of source registers. */

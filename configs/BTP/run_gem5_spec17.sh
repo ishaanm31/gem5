@@ -115,6 +115,7 @@ else
     exit 1
 fi
 echo $cputype | tee -a $SCRIPT_OUT
-
+echo "Launching gem5"
 # Launch gem5
-$GEM5_DIR/build/"$ISA"/gem5.opt --debug-flags=ScheduleTrace --debug-file=${BENCHMARK}_schedule_trace --outdir=$OUTPUT_DIR $GEM5_DIR/configs/BTP/config.py --fast-forward $fastforwardinsts --warmup-insts $warmupinsts --maxinsts $maximuminsts --benchmark=$BENCHMARK --benchmark_stdout=$OUTPUT_DIR/$BENCHMARK.out --benchmark_stderr=$OUTPUT_DIR/$BENCHMARK.err | tee -a $SCRIPT_OUT
+# $GEM5_DIR/build/"$ISA"/gem5.opt --debug-flags=ScheduleTrace  --debug-file=${BENCHMARK}_schedule_trace --outdir=$OUTPUT_DIR $GEM5_DIR/configs/BTP/config_17.py --fast-forward $fastforwardinsts --warmup-insts $warmupinsts --maxinsts $maximuminsts --benchmark=$BENCHMARK --benchmark_stdout=$OUTPUT_DIR/$BENCHMARK.out --benchmark_stderr=$OUTPUT_DIR/$BENCHMARK.err | tee -a $SCRIPT_OUT
+$GEM5_DIR/build/"$ISA"/gem5.opt --debug-flags=Context,Decode,O3CPU,ROB,ScheduleTrace --debug-file=${BENCHMARK}_schedule_trace --outdir=$OUTPUT_DIR $GEM5_DIR/configs/BTP/config_17.py --fast-forward $fastforwardinsts --warmup-insts $warmupinsts --maxinsts $maximuminsts --benchmark=$BENCHMARK --benchmark_stdout=$OUTPUT_DIR/$BENCHMARK.out --benchmark_stderr=$OUTPUT_DIR/$BENCHMARK.err | tee -a $SCRIPT_OUT

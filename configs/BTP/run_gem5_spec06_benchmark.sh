@@ -270,6 +270,9 @@ if [ -n "$fastforwardinsts" ] && [ -n "$warmupinsts" ]; then
         $GEM5_DIR/build/"$ISA"/gem5.opt --debug-flags=ScheduleTrace --debug-file=${BENCHMARK}_schedule_trace --outdir=$OUTPUT_DIR $GEM5_DIR/configs/BTP/config.py --fast-forward $fastforwardinsts --warmup-insts $warmupinsts --maxinsts $maximuminsts --benchmark=$BENCHMARK --benchmark_stdout=$OUTPUT_DIR/$BENCHMARK.out --benchmark_stderr=$OUTPUT_DIR/$BENCHMARK.err | tee -a $SCRIPT_OUT
         # --debug-flags=ScheduleTrace  --debug-file=${BENCHMARK}_trace
     fi
+
+#     7cb9450185b7bcc3c34c9926247c7afdccd5f100
+#     2e8645de4071923cb120ba7fae14eb3e535b967e
 else
     echo "Not Running with Simpoints"
     # $GEM5_DIR/build/"$ISA"/gem5.opt --debug-flags=O3CPUAll --debug-file=${BENCHMARK}_O3CPUAlltrace --outdir=$OUTPUT_DIR $GEM5_DIR/MTP/se.py --maxinsts $maximuminsts --cpu-type=$cputype --cpu-clock $cpuclock --caches --l1i_size $l1isize --l1i_assoc $l1iassoc --l1d_size $l1dsize --l1d_assoc $l1dassoc --l2cache --mem-size $memsize --benchmark=$BENCHMARK --benchmark_stdout=$OUTPUT_DIR/$BENCHMARK.out --benchmark_stderr=$OUTPUT_DIR/$BENCHMARK.err --execMode=$execMode --issueInProgramOrder=$issueInProgramOrder --utilizeBranchHints=$utilizeBranchHints --branch_outcome_file=$TRACE_OUTPUT_DIR/${BENCHMARK}_branchoutcomes.txt | tee -a $SCRIPT_OUT

@@ -56,6 +56,7 @@
 #include "mem/port.hh"
 #include "sim/eventq.hh"
 #include "sim/probe/probe.hh"
+#include "cpu/o3/boq.hh"
 
 namespace gem5
 {
@@ -213,6 +214,9 @@ class Fetch
 
     /** Sets the main backwards communication time buffer pointer. */
     void setTimeBuffer(TimeBuffer<TimeStruct> *time_buffer);
+
+    /** Sets pointer to the BOQ. */
+    void setBOQ(BOQ *boq_ptr);
 
     /** Sets pointer to list of active threads. */
     void setActiveThreads(std::list<ThreadID> *at_ptr);
@@ -526,6 +530,12 @@ class Fetch
 
     /** Event used to delay fault generation of translation faults */
     FinishTranslationEvent finishTranslationEvent;
+
+    /** Pointer to Branch Outcome Queue*/
+    BOQ* boq;
+
+    /** Utilize Branch Hints*/
+    bool utilizeBranchHints;
 
   protected:
     struct FetchStatGroup : public statistics::Group

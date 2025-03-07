@@ -11,9 +11,21 @@ benchmarks = {
         "executable": "bzip2",
         "cmd": ["bzip2", "input.program"],
     },
+    "bwaves_r": {
+        "executable": "bwaves_r",
+        "cmd": ["bwaves_r", "<", "../../data/refrate/input/bwaves_1.in"]
+    },
     "cactusADM": { #NotWorking
         "executable": "cactusADM",
         "cmd": ["cactusADM", "cactusADM", "benchADM.par"],
+    },
+    "cactuBSSN_r": {
+        "executable": "cactusBSSN_r",
+        "cmd": ["cactusBSSN_r", "spec_ref.par"],
+    },    
+    "mcf_r": {
+        "executable": "mcf_r",
+        "cmd": ["mcf_r", "inp.in"],
     },
     "calculix": {
         "executable": "calculix",
@@ -28,9 +40,9 @@ benchmarks = {
         "cmd": ["gamess"],
         "input": "cytosine.2.config",
     },
-    "gcc": {
-        "executable": "gcc",
-        "cmd": ["gcc", "200.in"],
+    "gcc_r": {
+        "executable": "cpugcc_r",
+        "cmd": ["cpugcc_r", "../../run/run_base_refrate_mytest-m64.0000/gcc-smaller.c"],
     },
     "GemsFDTD": { #NotWorking
         "executable": "GemsFDTD",

@@ -50,6 +50,13 @@ StaticInst::branchTarget(const PCStateBase &pc) const
 }
 
 std::unique_ptr<PCStateBase>
+StaticInst::branch(const PCStateBase &pc, Addr branch_target_pc, Addr branch_target_npc, MicroPC branch_target_upc, MicroPC branch_target_nupc) const
+{
+    panic("StaticInst::branch() called on instruction "
+          "that is not a branch.");
+}
+
+std::unique_ptr<PCStateBase>
 StaticInst::branchTarget(ThreadContext *tc) const
 {
     panic("StaticInst::branchTarget() called on instruction "

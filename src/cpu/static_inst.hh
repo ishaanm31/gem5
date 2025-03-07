@@ -341,6 +341,11 @@ class StaticInst : public RefCounted, public StaticInstFlags
     virtual std::unique_ptr<PCStateBase> branchTarget(
             const PCStateBase &pc) const;
 
+    /** Branches to the branch target address. */
+    virtual std::unique_ptr<PCStateBase> branch(
+            const PCStateBase &pc, Addr branch_target_pc, Addr branch_target_npc, MicroPC branch_target_upc, 
+            MicroPC branch_target_nupc) const;    
+
     /**
      * Return the target address for an indirect branch (jump).  The
      * register value is read from the supplied thread context, so

@@ -62,6 +62,7 @@
 #include "debug/Drain.hh"
 #include "debug/ExecFaulting.hh"
 #include "debug/HtmCpu.hh"
+#include "debug/Trace.hh"
 #include "debug/O3PipeView.hh"
 #include "params/BaseO3CPU.hh"
 #include "sim/faults.hh"
@@ -971,6 +972,32 @@ Commit::commitInsts()
             bool commit_success = commitHead(head_inst, num_committed);
 
             if (commit_success) {
+
+                DPRINTF(Trace,"CommitSuccess: Instruction: %s PC: %s\n",
+                    head_inst->staticInst->disassemble(head_inst->pcState().instAddr()), head_inst->pcState());
+
+                // If instruction at head that is committed is a branch instruction;
+                // print its PC, Branch Target Address and Branch Direction
+                if (head_inst->isControl())
+                {
+                    const PCStateBase &pc = head_inst->pcState();
+                    PCStateBase *pcs = pc.clone();
+                    PCStateBase *nextpcs = pc.clone();
+                    head_inst->staticInst->advancePC(*nextpcs);
+                    DPRINTF(Trace, "Branch: %s: %s: %d\n", *pcs, *nextpcs, pc.branching());
+                }
+
+                if(head_inst->isLoad())
+                {
+                    const PCStateBase &pc = head_inst->pcState();
+                    PCStateBase *pcs = pc.clone();
+                    InstResult res;
+                    std::string reg_value;
+                    res = head_inst->popResult();
+                    reg_value = res.asString();
+                    DPRINTF(Trace, "Load: %s: %s\n", *pcs, reg_value);
+                }
+
                 ++num_committed;
                 cpu->commitStats[tid]
                     ->committedInstType[head_inst->opClass()]++;

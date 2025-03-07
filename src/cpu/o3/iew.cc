@@ -82,6 +82,7 @@ IEW::IEW(CPU *_cpu, const BaseO3CPUParams &params)
       wbCycle(0),
       wbWidth(params.wbWidth),
       numThreads(params.numThreads),
+      utilizeBranchHints(params.utilizeBranchHints),
       iewStats(cpu)
 {
     if (dispatchWidth > MaxWidth)
@@ -313,6 +314,14 @@ void
 IEW::setScoreboard(Scoreboard *sb_ptr)
 {
     scoreboard = sb_ptr;
+}
+
+// Add a pointer to ROB in Instruction Queue so that it can be used to read the schedule instructions list
+void
+IEW::setROB(ROB *rob_ptr)
+{
+    rob = rob_ptr;
+    instQueue.setROB(rob);
 }
 
 bool
@@ -1270,19 +1279,38 @@ IEW::executeInsts()
             // that have not been executed.
             bool loadNotExecuted = !inst->isExecuted() && inst->isLoad();
 
-            if (inst->mispredicted() && !loadNotExecuted) {
-                fetchRedirect[tid] = true;
+            if(inst->isControl()) {
+                DPRINTF(IEW, "[tid:%i] [sn:%llu] Control Next PC: %s "
+                            "Predicted target was PC: %s\n",
+                            tid, inst->seqNum, inst->returnNextPC(), inst->readPredTarg());
+            }
 
+            /** Ideally, we should face zero mispredictions since we are following correct path,
+             * but in case of faults, sometimes nextPC is not set properly, and inst->mispredicted()
+             * function returns true (verified with the help of trace). Therefore, we can comment squashDueToBranch
+             * function safely without any effects
+             * (can be verified by comparing committed instructions trace with unmodified base OoO execution)
+             *
+            */
+            if (inst->mispredicted() && !loadNotExecuted) {
+                // No need to redirect if branch hints are used
+                if(!utilizeBranchHints) {
+                    fetchRedirect[tid] = true;
+                }
+                DPRINTF(IEW, "[tid:%i] Mispredicted Instruction is: %s\n", tid,
+                inst->staticInst->disassemble(inst->pcState().instAddr()));
                 DPRINTF(IEW, "[tid:%i] [sn:%llu] Execute: "
                         "Branch mispredict detected.\n",
                         tid, inst->seqNum);
-                DPRINTF(IEW, "[tid:%i] [sn:%llu] "
+                DPRINTF(IEW, "[tid:%i] [sn:%llu] Next PC: %s "
                         "Predicted target was PC: %s\n",
-                        tid, inst->seqNum, inst->readPredTarg());
+                        tid, inst->seqNum, inst->returnNextPC(), inst->readPredTarg());
                 DPRINTF(IEW, "[tid:%i] [sn:%llu] Execute: "
                         "Redirecting fetch to PC: %s\n",
                         tid, inst->seqNum, inst->pcState());
                 // If incorrect, then signal the ROB that it must be squashed.
+                // Mispredicted stats will always be zero in case of branch hint utilization
+                if(!utilizeBranchHints) {
                 squashDueToBranch(inst, tid);
 
                 ppMispredict->notify(inst);
@@ -1291,6 +1319,7 @@ IEW::executeInsts()
                     iewStats.predictedTakenIncorrect++;
                 } else {
                     iewStats.predictedNotTakenIncorrect++;
+                }
                 }
             } else if (ldstQueue.violation(tid)) {
                 assert(inst->isMemRef());

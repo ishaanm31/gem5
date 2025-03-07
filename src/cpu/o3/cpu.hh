@@ -69,6 +69,7 @@
 #include "cpu/timebuf.hh"
 #include "params/BaseO3CPU.hh"
 #include "sim/process.hh"
+#include "cpu/o3/boq.hh"
 
 namespace gem5
 {
@@ -537,6 +538,12 @@ class CPU : public BaseCPU
 
     /** The cycle that the CPU was last running, used for statistics. */
     Cycles lastRunningCycle;
+
+    /** Pointer to Branch Outcome Queue*/
+    BOQ boq;
+
+    /** Utilize Branch Hints*/
+    bool utilizeBranchHints;
 
     /** The cycle that the CPU was last activated by a new thread*/
     Tick lastActivatedCycle;

@@ -302,6 +302,21 @@ class ROB
      *  in the ROB*/
     InstIt head;
 
+       /** Single entry in scheduleinstList consists of instruction's PC and its sequence number. 
+     * Sequence number needed since instructions are squashed based on sequence number.
+     * @Todo How to assign sequence numbers in OoO schedule
+    */
+   struct ScheduleInstListEntry
+   {
+       Addr instPC;
+       InstSeqNum seqNum;
+   };
+
+   /** List of all the instructions according to given instruction sequence.
+    * Can be in program order or OoO schedule
+    */
+   std::list<ScheduleInstListEntry> scheduleinstList[MaxThreads];
+
   private:
     /** Iterator used for walking through the list of instructions when
      *  squashing.  Used so that there is persistent state between cycles;
@@ -311,6 +326,11 @@ class ROB
      *  This will always be set to cpu->instList.end() if it is invalid.
      */
     InstIt squashIt[MaxThreads];
+
+    typedef typename std::list<ScheduleInstListEntry>::iterator ScheduleInstIt;
+
+    /** Same iterator as squashIt to squash instructions in scheduleinstList*/
+    ScheduleInstIt scheduleinstsquashIt[MaxThreads];
 
   public:
     /** Number of instructions in the ROB. */
@@ -326,8 +346,28 @@ class ROB
     /** Is the ROB done squashing. */
     bool doneSquashing[MaxThreads];
 
+    /** Is the Schedule Instruction List done squashing. */
+    bool doneScheduleInstListSquashing[MaxThreads];
+
+    /** Is the Head of the Schedule Instruction List done squashing. 
+     * This flag is added to squash head of instruction list if it is in the mispredicted path of instructions
+     * and its sequence number is greater than the sequence number of mispredicted branch instruction.
+     * We are squashing head of scheduleinstList in this case and when we are sure top of ready instructions list
+     * is equal to head of scheduleinstList.
+    */
+    bool doneScheduleInstListHeadSquashing[MaxThreads];
+
     /** Number of active threads. */
     ThreadID numThreads;
+
+    /** Issue instructions in program order */
+    bool issueInProgramOrder;
+
+    /** Pointer to Branch Outcome Queue*/
+    BOQ* boq;
+
+    /** Utilize Branch Hints*/
+    bool utilizeBranchHints;
 
 
     struct ROBStats : public statistics::Group
@@ -339,6 +379,19 @@ class ROB
         // The number of rob_writes
         statistics::Scalar writes;
     } stats;
+      public:
+        /** Returns a pointer to the head instruction of a specific thread within
+         *  schedule instruction list.
+        */
+        const ScheduleInstListEntry &readHeadInstSchedule(ThreadID tid);
+    
+        /** Retires the head instruction of a specific thread, removing it from the
+         *  schedule instruction list.
+         */
+        void retireHeadInstSchedule(ThreadID tid);
+    
+        /** Sets pointer to the BOQ. */
+        void setBOQ(BOQ *boq_ptr);
 };
 
 } // namespace o3

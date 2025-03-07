@@ -157,6 +157,13 @@ class X86MicroopBase : public X86StaticInst
 
     // Explicitly import the otherwise hidden branchTarget.
     using StaticInst::branchTarget;
+
+    std::unique_ptr<PCStateBase> branch(
+            const PCStateBase &branch_pc, Addr branch_target_pc, Addr branch_target_npc, MicroPC branch_target_upc, MicroPC branch_target_nupc) const override;
+
+    // Explicitly import the otherwise hidden branch.
+    using StaticInst::branch;
+
 };
 
 class MicroCondBase : public X86MicroopBase

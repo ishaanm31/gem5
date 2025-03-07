@@ -77,6 +77,7 @@ namespace o3
 class FUPool;
 class CPU;
 class IEW;
+class ROB;
 
 /**
  * A standard instruction queue class.  It holds ready instructions, in
@@ -277,6 +278,10 @@ class InstructionQueue
     /** Debug function to print all instructions. */
     void printInsts();
 
+    /** Sets pointer to the ROB. */
+    void setROB(ROB *rob_ptr);
+
+
   private:
     /** Does the actual squashing. */
     void doSquash(ThreadID tid);
@@ -287,6 +292,10 @@ class InstructionQueue
 
     /** Pointer to the CPU. */
     CPU *cpu;
+
+    /** Pointer to the ROB. */
+    ROB *rob;
+
 
     /** Cache interface. */
     memory::MemInterface *dcacheInterface;
@@ -442,6 +451,9 @@ class InstructionQueue
      *  @todo: Make there be a distinction between the delays within IEW.
      */
     Cycles commitToIEWDelay;
+
+    /** Issue instructions in program order */
+    bool issueInProgramOrder;
 
     /** The sequence number of the squashed instruction. */
     InstSeqNum squashedSeqNum[MaxThreads];
