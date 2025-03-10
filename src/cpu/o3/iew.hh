@@ -420,6 +420,9 @@ class IEW
     /** Number of active threads. */
     ThreadID numThreads;
 
+    /** Utilize Branch Hints*/
+    bool utilizeBranchHints;
+
     /** Pointer to list of active threads. */
     std::list<ThreadID> *activeThreads;
 

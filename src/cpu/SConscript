@@ -45,8 +45,8 @@ DebugFlag('Commit')
 DebugFlag('Context')
 DebugFlag('Decode')
 # Added debug flag for extracting branch outcomes
-# DebugFlag('BranchOutcomes', "Branch Instructions with outcomes")
-# DebugFlag('CommitSuccess', "Successfully committed instructions with PCs")
+DebugFlag('BranchOutcomes', "Branch Instructions with outcomes")
+DebugFlag('CommitSuccess', "Successfully committed instructions with PCs")
 DebugFlag('Trace', "Trace of successfully committed instructions, branch instructions with outcomes and load hints")
 DebugFlag('DynInst')
 DebugFlag('ExecEnable',

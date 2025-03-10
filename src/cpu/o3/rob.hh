@@ -52,6 +52,7 @@
 #include "cpu/o3/limits.hh"
 #include "cpu/reg_class.hh"
 #include "enums/SMTQueuePolicy.hh"
+#include "cpu/o3/boq.hh"
 
 namespace gem5
 {
